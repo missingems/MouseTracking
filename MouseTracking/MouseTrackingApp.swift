@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-@main
-struct MouseTrackingApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
-}
+//@main
+//struct MouseTrackingApp: App {
+//    var body: some Scene {
+//        WindowGroup {
+//            ContentView()
+//        }
+//    }
+//}
