@@ -20,21 +20,31 @@ final class OverlayWindow: NSWindow {
     self.ignoresMouseEvents = true
     self.collectionBehavior = [.canJoinAllSpaces, .ignoresCycle]
     
-    MouseTrackingManager.shared.subscribe { [weak self] event in
-      self?.updateOverlayPosition(with: event)
+    SparkleViewModel.shared.currentStateChanged = { [weak self] state in
+      MouseTrackingManager.shared.unsubscribe()
+      
+      switch state {
+      case .inactive:
+        self?.contentView?.isHidden = true
+        
+      case .listening, .processing:
+        self?.contentView?.isHidden = false
+        self?.updateOverlayPosition()
+        
+        MouseTrackingManager.shared.subscribe { [weak self] event in
+          self?.updateOverlayPosition()
+        }
+      }
     }
   }
   
-  func updateOverlayPosition(with event: NSEvent) {
-    DispatchQueue.main.async { [weak self] in
-      guard let self = self else { return }
-      if isVisible == false {
-        orderFrontRegardless()
-      }
-      let mouseLocation = NSEvent.mouseLocation
-      let newOrigin = NSPoint(x: mouseLocation.x + 10, y: mouseLocation.y - 35)
-      
-      setFrameOrigin(newOrigin)
+  func updateOverlayPosition() {
+    if isVisible == false {
+      orderFrontRegardless()
     }
+    let mouseLocation = NSEvent.mouseLocation
+    let newOrigin = NSPoint(x: mouseLocation.x + 10, y: mouseLocation.y - 35)
+    
+    setFrameOrigin(newOrigin)
   }
 }

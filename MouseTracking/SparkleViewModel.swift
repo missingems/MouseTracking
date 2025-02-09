@@ -7,5 +7,11 @@ import SwiftUI
     case inactive, listening, processing
   }
   
-  var currentState: AnimationState = .inactive
+  var currentStateChanged: ((AnimationState) -> Void)?
+  
+  var currentState: AnimationState = .inactive {
+    didSet {
+      currentStateChanged?(currentState)
+    }
+  }
 }
